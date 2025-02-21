@@ -142,7 +142,7 @@ const handleAddToFavorites = () => {
       <p class="text-sm text-black">By: {{ item.channelTitle }}</p>
       <p class="text-sm text-gray-600">Duration: {{ item.duration }}</p>
 
-      <!-- Heart icon positioned at the bottom right -->
+    
       <button v-if="!isSelect" @click="addFavorites(item.id)" class="absolute bottom-2 right-2 text-b text-2l bg-gray-200 p-2 rounded-full hover:bg-blue-500 hover:text-white transition-all">
         Add to favorites
       </button>

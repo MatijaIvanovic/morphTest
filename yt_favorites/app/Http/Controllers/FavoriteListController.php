@@ -41,15 +41,13 @@ class FavoriteListController extends Controller
 
         $videos_id = $request->input('videoId');
         
-
+        try{
+            FavoriteList::create(['user_id'=>$user->id,'video_id'=>$videos_id,'added_at'=>now()]);
         
-            try{
-                FavoriteList::create(['user_id'=>$user->id,'video_id'=>$videos_id,'added_at'=>now()]);
-        
-                return response()->json(['message'=>'successfully added!'], 200);
-            }catch (QueryException $e) {
-                return response()->json(['message' => 'This connection already exists!'], 422);
-            }
+            return response()->json(['message'=>'successfully added!'], 200);
+        }catch (QueryException $e) {
+            return response()->json(['message' => 'This connection already exists!'], 422);
+        }
     
     }
     
