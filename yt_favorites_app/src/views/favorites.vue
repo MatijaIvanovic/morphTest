@@ -152,7 +152,7 @@ const deleteFavorites = async(videoId)=>{
   </li>
 </ul>
 
-    <!-- No favorites found -->
+    
     <div v-else>No favorites found.</div>
   </div>
 </template>

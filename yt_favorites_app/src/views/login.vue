@@ -32,7 +32,6 @@ import { useAuthStore } from '../stores/authStore';
           router.push('/');
         });
         
-/*         alert('Loged in successfully! Redirecting to home page...'); */
       }
     }catch(error: any){
       console.error('Login failed', error);
