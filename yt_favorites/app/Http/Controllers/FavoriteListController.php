@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\FavoriteList;
+use DeepCopy\Filter\Filter;
+use Error;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Tymon\JWTAuth\Facades\JWTAuth;
+
+use function PHPUnit\Framework\isArray;
 
 class FavoriteListController extends Controller
 {
@@ -34,16 +39,18 @@ class FavoriteListController extends Controller
         }
 
 
-        $video_id = $request->input('videoId');
-        if(FavoriteList::where(['user_id'=>$user->id, 'video_id'=>$video_id])->exists()){
-            return response()->json(['message'=>'This connection already exists!']);
-        }
-
-    
-        FavoriteList::create(['user_id'=>$user->id,'video_id'=>$video_id,'added_at'=>now()]);
+        $videos_id = $request->input('videoId');
         
-        return response()->json(['message'=>'successfully added!'], 200);
 
+        
+            try{
+                FavoriteList::create(['user_id'=>$user->id,'video_id'=>$videos_id,'added_at'=>now()]);
+        
+                return response()->json(['message'=>'successfully added!'], 200);
+            }catch (QueryException $e) {
+                return response()->json(['message' => 'This connection already exists!'], 422);
+            }
+    
     }
     
 
