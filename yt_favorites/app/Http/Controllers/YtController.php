@@ -40,10 +40,10 @@ class YtController extends Controller
         
         foreach($items as $item){
             $videos[]=[
-                'id'=> $item['id'],
+                'video_id'=> $item['id'],
                 'title' => $item['snippet']['title'],
-                'channelTitle' =>$item['snippet']['channelTitle'],
-                'thumbnailUrl'=>$item['snippet']['thumbnails']['medium']['url'],
+                'channel_name' =>$item['snippet']['channelTitle'],
+                'thumbnail_url'=>$item['snippet']['thumbnails']['medium']['url'],
                 'duration'=>$this->formatDuration($item['contentDetails']['duration']),
             ];
         }

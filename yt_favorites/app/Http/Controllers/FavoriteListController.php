@@ -54,6 +54,17 @@ class FavoriteListController extends Controller
     
     }
     
+    public function checkIfExists(Request $request){
+        try{
+            $user = JWTAuth::parseToken()->authenticate();
+        }catch(\Exception $e){
+            return response()->json(['message'=>'Not a valid token!']);
+        }
+
+        $video_id = $request->query('video_id');
+        $exists = FavoriteList::where(['user_id'=>$user->id,'video_id'=>$video_id])->exists();
+        return response()->json(['exists'=>$exists]);
+    }
 
     public function listFavorites(){
         

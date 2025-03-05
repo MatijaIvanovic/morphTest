@@ -27,6 +27,7 @@ Route::withoutMiddleware([VerifyCsrfToken::class])->prefix('/api')->group(functi
         Route::get('/search',[YtController::class,'searchVideos'])->name('search');
         Route::get('/orderByCreatedAt',[FavoriteListController::class,'orderListByCreatedAt'])->name('orderByCreatedAt');
         Route::get('/orderByDuration',[FavoriteListController::class,'orderListByDuration'])->name('orderByDuration');
+        Route::get('favorites', [FavoriteListController::class, 'checkIfExists'])->name('checkIfExists');
         Route::get('/check-token', function(){
             try{
                 JWTAuth::parseToken()->authenticate();

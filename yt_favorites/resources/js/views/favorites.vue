@@ -21,7 +21,7 @@ onMounted(() => {
 });
 
   const orderByAddedTime= async()=>{
-    console.log("starting value ", isSortedByAddedAt.value);
+    
     try{
       const token = localStorage.getItem('token');
       const response = await axios.get(`/api/orderByCreatedAt?orderBy=${String(isSortedByAddedAt.value)}`,{
@@ -30,7 +30,6 @@ onMounted(() => {
         }});
       items.value=response.data;
       isSortedByAddedAt.value=!isSortedByAddedAt.value;
-      console.log(isSortedByAddedAt.value);
     }catch(error){
       console.log(error);
     }
