@@ -1,21 +1,10 @@
 import {defineStore} from 'pinia';
-
+import axios from 'axios';
 
 export const useAuthStore = defineStore('auth', {
  state: () => ({
     isLoggedIn:false,
     token:null as string |null,
-    checkLoginStatus(){
-      const token = localStorage.getItem('token');
-      if(token){
-          this.isLoggedIn =true;
-          this.token = token;
-      }else{
-          this.isLoggedIn=false;
-          this.token = null;
-      }
-
-  }
  }),
  actions: {
     login(token: string){
@@ -31,14 +20,24 @@ export const useAuthStore = defineStore('auth', {
         localStorage.removeItem('token');
     },
 
-    checkLoginStatus(){
+    async checkLoginStatus(){
         const token = localStorage.getItem('token');
-        if(token){
+
+        if(!token){
+            this.logout();
+            return;
+        }
+
+        try{
+            await axios.get('/api/check-token',{
+                headers: {Authorization: `Bearer ${token}`},
+            });
             this.isLoggedIn =true;
             this.token = token;
-        }else{
-            this.isLoggedIn=false;
-            this.token = null;
+        }
+        catch(error){
+            console.error('Invalid token, logging out... ', error);
+            this.logout();
         }
 
     }

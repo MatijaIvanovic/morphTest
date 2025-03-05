@@ -82,13 +82,13 @@ const deleteFavorites = async(videoId)=>{
   try{
 
     const token = localStorage.getItem('token');
-    const response = await axios.delete('/api/delete', {
-        data:{videoId:videoId},
+    
+    const response = await axios.delete(`/api/delete?video_id=${videoId}`, {
         headers:{
           Authorization:`Bearer ${token}`
         }
       });
-    
+      
     if(response.data===1){
       alertType.value='success';
       alertMessage.value = 'Successfully deleted!';
@@ -97,6 +97,7 @@ const deleteFavorites = async(videoId)=>{
     }else{
       alertType.value='error';
       alertMessage.value = "Couldn't delete1";
+      console.log(videoId);
     }
     
     setTimeout(()=>{
@@ -132,20 +133,20 @@ const deleteFavorites = async(videoId)=>{
 
 
 
-  <li v-for="item in items" :key="item.id" class="flex items-center justify-between gap-x-4 py-5">
+  <li v-for="item in items" :key="item.video_id" class="flex items-center justify-between gap-x-4 py-5">
     <div class="flex items-center gap-x-4">
-      <img class="w-16 h-16 object-cover rounded-md" :src="item.thumbnaillUrl" alt="Video Thumbnail" />
+      <img class="w-16 h-16 object-cover rounded-md" :src="item.thumbnail_url" alt="Video Thumbnail" />
       
       <div class="flex flex-col min-w-0 flex-grow gap-y-1">
         <p class="text-lg font-semibold text-gray-900">{{ item.title }}</p>
-        <p class="text-sm text-gray-600">{{ item.channel }}</p>
+        <p class="text-sm text-gray-600">{{ item.channel_name }}</p>
       </div>
     </div>
     <div class="flex items-center justify-end gap-x-6">
       <p class="text-xs text-gray-500">{{ item.duration }}</p>
       <p class="text-xs text-gray-400">{{ item.addedAt }}</p>
 
-      <button @click="deleteFavorites(item.id)" class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-700 hover:text-white">
+      <button @click="deleteFavorites(item.video_id)" class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-700 hover:text-white">
         Delete
       </button>
     </div>

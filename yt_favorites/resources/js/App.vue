@@ -12,8 +12,8 @@ import { useAuthStore } from './stores/authStore'
 
 const authStore = useAuthStore();
 
-onMounted(()=>{
-  authStore.checkLoginStatus();
+onMounted(async ()=>{
+  await authStore.checkLoginStatus();
   if(!authStore.isLoggedIn){
   router.push('/auth/login');
 }

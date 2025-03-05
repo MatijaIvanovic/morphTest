@@ -4,7 +4,7 @@ import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 /* const items = ref([]); */
 import { useAuthStore } from '../stores/authStore'
-
+import lodash, { debounce } from 'lodash'
 
 const authStore = useAuthStore();
 const alertMessage = ref("");
@@ -21,7 +21,6 @@ const listItems= async ()=>{
   console.log('starting the communcation with the API');
   try{
     const response = await axios.get('/api/videos');
-    console.log('API response:', response.data);
     items.value= response.data;
   }catch(Error ){
     console.error("Error message: ", Error);
@@ -45,23 +44,32 @@ const search= async(searchQuery)=>{
   }
 }
 
-watch(()=> props.searchQuery,(newQuery)=>{
+const debounceSrch = debounce((newQuery)=>{
   if(newQuery.trim()){
     search(newQuery);
   }
-  else{
-    listItems();
+},500)
+
+watch(()=> props.searchQuery,(newQuery)=>{
+  if(newQuery.trim()){
+      debounceSrch(newQuery);
   }
+  else{listItems();}
+
 })
 
-const addFavorites = async(videoId)=>{
+const addFavorites = async(videoId, videoTitle, videoDuration, channelTitle, thumbnailUrl,)=>{
 
     try{
       const token = localStorage.getItem('token');
 
 
       const response = await axios.post('/api/favorites', {
-        videoId:videoId
+        video_id:videoId,
+        title:videoTitle,
+        duration: videoDuration,
+        thumbnail_url: thumbnailUrl,
+        channel_name:channelTitle,
       },{
         headers:{
           Authorization:`Bearer ${token}`
@@ -139,12 +147,12 @@ const handleAddToFavorites = () => {
     
     <div v-for="item in items" :key="item.id" class="relative p-4 border rounded-lg">
       <img :src="item.thumbnailUrl" alt="Video Thumbnail" class="w-full h-auto rounded">
-      <h2 class="text-lg font-bold">{{ item.title }}</h2>
+      <h2 class="text-lg font-bold text-black">{{ item.title }}</h2>
       <p class="text-sm text-black">By: {{ item.channelTitle }}</p>
       <p class="text-sm text-gray-600">Duration: {{ item.duration }}</p>
 
     
-      <button v-if="!isSelect" @click="addFavorites(item.id)" class="absolute bottom-2 right-2 text-b text-2l bg-gray-200 p-2 rounded-full hover:bg-blue-500 hover:text-white transition-all">
+      <button v-if="!isSelect" @click="addFavorites(item.id, item.title, item.duration, item.channelTitle, item.thumbnailUrl)" class="absolute bottom-2 right-2 text-b text-black text-2l bg-gray-200 p-2 rounded-full hover:bg-blue-500 hover:text-white transition-all">
         Add to favorites
       </button>
       <input

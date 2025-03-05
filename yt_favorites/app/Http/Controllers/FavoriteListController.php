@@ -39,10 +39,13 @@ class FavoriteListController extends Controller
         }
 
 
-        $videos_id = $request->input('videoId');
-        
+       
+        $data = $request->json()->all();
+
+        $data['user_id'] = $user->id;
+
         try{
-            FavoriteList::create(['user_id'=>$user->id,'video_id'=>$videos_id,'added_at'=>now()]);
+            FavoriteList::create($data);
         
             return response()->json(['message'=>'successfully added!'], 200);
         }catch (QueryException $e) {
@@ -54,45 +57,23 @@ class FavoriteListController extends Controller
 
     public function listFavorites(){
         
-        $apiUrl = env('API_URL').'videos';
-        $apiKey= env('API_KEY');
+      
         try{
             $user= JWTAuth::parseToken()->authenticate();
         }catch(\Exception $e){
             return response()->json(['message'=>'Not a valid token!']);
         }
         
-        $videos=FavoriteList::where(['user_id'=>$user->id])->pluck('video_id')->toArray();
-        
-        
-        
+        $videos=FavoriteList::where(['user_id'=>$user->id])->get();
 
         $favoriteVideos=[];
-
-        $response = Http::get($apiUrl,[
-            'part'=>implode(',',['snippet','contentDetails']),
-            'id'=>implode(',',$videos),
-            'key'=>$apiKey
-        ]);
-        $items= $response->json()['items'];
         
-        foreach($items as $item){
+        foreach($videos as $video){
 
-            $addedAt = FavoriteList::where(['user_id'=>$user->id, 'video_id'=>$item['id']])->value('added_at');
-            $favoriteVideos[]=[
-                'id'=>$item['id'],
-                'title' => $item['snippet']['title'],
-                'thumbnaillUrl' => $item['snippet']['thumbnails']['high']['url'],
-                'channel' => $item['snippet']['channelTitle'],
-                'duration'=>$this->formatDuration($item['contentDetails']['duration']),
-                'addedAt'=> $addedAt,
-            ];
+            $favoriteVideos[]=$video;
         }
-        
-
+    
         return response()->json($favoriteVideos);
-
-
     }
 
     public function delete(Request $request){
@@ -103,7 +84,7 @@ class FavoriteListController extends Controller
             return response()->json(['message'=>'Not a valid token!']);
         }
 
-        $id = $request->input('videoId');
+        $id = $request->input('video_id');
 
         $response = FavoriteList::where(['user_id'=>$user->id,'video_id'=>$id])->delete();
 

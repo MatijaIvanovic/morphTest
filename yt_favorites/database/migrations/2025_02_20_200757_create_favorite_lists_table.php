@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('favorite_lists', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('video_id');
+            $table->string( 'video_id');
+            $table->string('title');
+            $table->string('duration');
+            $table->string('thumbnail_url');
+            $table->string('channel_name');
             $table->unique(['user_id', 'video_id']);
-            $table->timestamp('added_at');
+            $table->timestamps();
         });
     }
 

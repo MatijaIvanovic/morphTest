@@ -75,7 +75,7 @@ class YtController extends Controller
                 'id'=> $item['id']['videoId'],
                 'title' => $item['snippet']['title'],
                 'channelTitle' =>$item['snippet']['channelTitle'],
-                'thumbnailUrl'=>$item['snippet']['thumbnails']['medium']['url'],
+                'thumbnailUrl'=>$item['snippet']['thumbnails']['high']['url'],
                 'duration'=>'N/A',
             ];
         }

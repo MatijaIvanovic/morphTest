@@ -7,6 +7,7 @@ use App\Http\Middleware\CorsMiddleware;
 use App\Http\Middleware\HandleCors;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 Route::get('/{any}', function () {
     return view('welcome');
@@ -23,4 +24,13 @@ Route::withoutMiddleware([VerifyCsrfToken::class])->prefix('/api')->group(functi
         Route::get('/listfavorites',[FavoriteListController::class,'listFavorites'])->name('listFavorites');
         Route::delete('/delete', [FavoriteListController::class, 'delete'])->name('delete');
         Route::get('/search',[YtController::class,'searchVideos'])->name('search');
+        Route::get('/check-token', function(){
+            try{
+                JWTAuth::parseToken()->authenticate();
+                return response()->json(['valid'=>true],200);
+            }
+            catch(Exception $e){
+                return response()->json(['valid'=>false],401);
+            }
+        });
 });

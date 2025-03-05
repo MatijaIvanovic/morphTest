@@ -10,4 +10,14 @@ export default defineConfig({
         }),
         vue(),
     ],
+    server: {
+        host: 'yt_favorites.test',
+        https: false,
+        hmr:{
+            protocol: 'ws',
+            host:'yt_favorites.test'
+        }
+    }
+
 });
+
