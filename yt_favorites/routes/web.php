@@ -5,6 +5,7 @@ use App\Http\Controllers\FavoriteListController;
 use App\Http\Controllers\YtController;
 use App\Http\Middleware\CorsMiddleware;
 use App\Http\Middleware\HandleCors;
+use App\Models\FavoriteList;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -24,6 +25,8 @@ Route::withoutMiddleware([VerifyCsrfToken::class])->prefix('/api')->group(functi
         Route::get('/listfavorites',[FavoriteListController::class,'listFavorites'])->name('listFavorites');
         Route::delete('/delete', [FavoriteListController::class, 'delete'])->name('delete');
         Route::get('/search',[YtController::class,'searchVideos'])->name('search');
+        Route::get('/orderByCreatedAt',[FavoriteListController::class,'orderListByCreatedAt'])->name('orderByCreatedAt');
+        Route::get('/orderByDuration',[FavoriteListController::class,'orderListByDuration'])->name('orderByDuration');
         Route::get('/check-token', function(){
             try{
                 JWTAuth::parseToken()->authenticate();

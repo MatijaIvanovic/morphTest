@@ -20,47 +20,38 @@ onMounted(() => {
   listItems();
 });
 
-  const orderByAddedTime= ()=>{
-    if(isSortedByAddedAt.value){
-      items.value.reverse();
-      
-    }else{
-      items.value.sort((a,b)=> new Date(b.addedAt)-new Date(a.addedAt));
-    } 
-    isSortedByAddedAt.value=!isSortedByAddedAt.value;
+  const orderByAddedTime= async()=>{
+    console.log("starting value ", isSortedByAddedAt.value);
+    try{
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`/api/orderByCreatedAt?orderBy=${String(isSortedByAddedAt.value)}`,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }});
+      items.value=response.data;
+      isSortedByAddedAt.value=!isSortedByAddedAt.value;
+      console.log(isSortedByAddedAt.value);
+    }catch(error){
+      console.log(error);
+    }
   }
   
-  const parseDurationToSeconds = (duration) => {
-    
-    if(typeof duration ==='string' && duration.includes(':')){
-      const parts = duration.split(':').map(Number);
+ 
 
-      if(parts.length === 3){
-        const [hours, minutes, seconds] = parts;
-        return hours*3600 + hours *60 + seconds;
-      }else if(parts.length === 2){
-        const [minutes, seconds] = parts;
-        return minutes * 60 + seconds;
-      }else{
-        const seconds = parts;
-        return seconds;
-      }
-
+  const orderByDuration = async()=>{
+    try{
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`/api/orderByDuration?orderBy=${String(isSortedByDuration.value)}`,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      });
+      items.value = response.data;
+      isSortedByDuration.value =!isSortedByDuration.value;
+      
+    }catch(error){
+      console.log(error);
     }
-    
-    return 0;
-    
-  
-};
-
-  const orderByDuration = ()=>{
-    if(isSortedByDuration.value){
-      items.value.sort((a,b)=> parseDurationToSeconds(a.duration)- parseDurationToSeconds(b.duration));
-    }else{
-      items.value.sort((a,b)=> parseDurationToSeconds(b.duration) - parseDurationToSeconds(a.duration));
-
-    }
-    isSortedByDuration.value=!isSortedByDuration.value;
   }
 
   const listItems = async () => {
@@ -144,7 +135,7 @@ const deleteFavorites = async(videoId)=>{
     </div>
     <div class="flex items-center justify-end gap-x-6">
       <p class="text-xs text-gray-500">{{ item.duration }}</p>
-      <p class="text-xs text-gray-400">{{ item.addedAt }}</p>
+      <p class="text-xs text-gray-400">{{ item.created_at }}</p>
 
       <button @click="deleteFavorites(item.video_id)" class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-700 hover:text-white">
         Delete

@@ -76,6 +76,58 @@ class FavoriteListController extends Controller
         return response()->json($favoriteVideos);
     }
 
+    public function orderListByCreatedAt(Request $request){
+       
+        $orderBy = $request->input('orderBy');
+
+       
+
+        try{
+            $user= JWTAuth::parseToken()->authenticate();
+        }catch(\Exception $e){
+            return response()->json(['message'=>'Not a valid token!']);
+        }
+
+        
+        if($orderBy=='true'){
+            $videos=FavoriteList::where(['user_id'=>$user->id])->orderBy('created_at')->get();
+            
+        }else if($orderBy=='false'){
+            $videos=FavoriteList::where(['user_id'=>$user->id])->orderBy('created_at','desc')->get();
+            
+        }
+
+        
+    
+        return response()->json($videos);
+
+    }
+    public function orderListByDuration(Request $request){
+        $orderBy = $request->input('orderBy');
+
+        try{
+            $user= JWTAuth::parseToken()->authenticate();
+        }catch(\Exception $e){
+            return response()->json(['message'=>'Not a valid token!']);
+        }
+
+        
+        if($orderBy=='true'){
+            $videos=FavoriteList::where(['user_id'=>$user->id])
+                ->orderBy('duration')
+                ->get();
+            
+        }else if($orderBy=='false'){
+            $videos=FavoriteList::where(['user_id'=>$user->id])
+                ->orderBy('duration','desc')
+                    ->get();
+            
+        }
+        return response()->json($videos);
+        
+
+    }
+
     public function delete(Request $request){
 
         try{
@@ -84,7 +136,7 @@ class FavoriteListController extends Controller
             return response()->json(['message'=>'Not a valid token!']);
         }
 
-        $id = $request->input('video_id');
+        $id = $request->query('video_id');
 
         $response = FavoriteList::where(['user_id'=>$user->id,'video_id'=>$id])->delete();
 
