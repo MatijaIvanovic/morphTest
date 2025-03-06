@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenInvalidException;
 
 class AuthController extends Controller
 {
@@ -75,7 +75,7 @@ class AuthController extends Controller
             JWTAuth::invalidate(JWTAuth::parseToken($token));
             return response()->json(['message' => 'Logged out successfully!'], 200);
 
-        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+        } catch (TokenInvalidException $e) {
             return response()->json(['message' => 'Invalid token.'], 400);
             
         } catch (\Exception $e) {

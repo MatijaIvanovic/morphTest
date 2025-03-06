@@ -8,7 +8,7 @@ use App\Http\Middleware\HandleCors;
 use App\Models\FavoriteList;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 Route::get('/{any}', function () {
     return view('welcome');

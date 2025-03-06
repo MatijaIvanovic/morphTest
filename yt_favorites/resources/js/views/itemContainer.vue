@@ -13,10 +13,11 @@ const alertType = ref("success");
 const items=ref([]);
 const isSelect=ref(false);
 const selectedVideos = ref([]);
-/*
+const player = ref('');
+
 const isModalOpen =ref(false);
 const currentVideoId= ref('');
- */
+ 
 const props =defineProps({
   searchQuery: String
 });
@@ -37,14 +38,14 @@ onMounted(()=>{
 })
 
 
-/* const playVideo = (video_id)=>{
+const playVideo = (video_id)=>{
   currentVideoId.value= video_id;
   isModalOpen.value= true;
 }
 const closeModal = ()=>{
   isModalOpen.value=false;
   currentVideoId.value='';
-} */
+}
 
 const search= async(searchQuery)=>{
 
@@ -238,17 +239,17 @@ const handleAddToFavorites = async(video_id = null) => {
     </div>
 
     <div v-for="item in items" :key="item.video_id" class="relative p-4 border rounded-lg">
-     <!--  <img 
+      <img 
         @click="playVideo(item.video_id)" 
         :src="item.thumbnail_url" 
         alt="Video Thumbnail" 
         class="w-full h-auto rounded"
-      > -->
-      <img 
+      >
+      <!-- <img 
         :src="item.thumbnail_url" 
         alt="Video Thumbnail" 
         class="w-full h-auto rounded"
-      >
+      > -->
       <h2 class="text-lg font-bold text-black">{{ item.title }}</h2>
       <p class="text-sm text-black">By: {{ item.channel_name }}</p>
       <p class="text-sm text-gray-600">Duration: {{ item.duration }}</p>
@@ -269,21 +270,16 @@ const handleAddToFavorites = async(video_id = null) => {
         class="absolute bottom-2 right-2 w-6 h-6 rounded-md border-2 border-gray-400 bg-white focus:ring-2 focus:ring-blue-500"
       />
 
-     <!--  <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
         <div class="bg-white p-4 rounded-lg relative">
           <button @click="closeModal" class="absolute top-2 right-2 text-white bg-red-500 rounded-full px-2 py-1">X</button>
-          <iframe
-            :src="'https://www.youtube.com/embed/'+currentVideoId"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-white; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            class="w-full h-64"
-          ></iframe>
+          <iframe id="player" :src="'https://www.youtube.com/embed/' + currentVideoId" sandbox="allow-scripts allow-same-origin" frameborder="0" allowfullscreen></iframe>
+
           
         </div>
-      </div> -->
-<!--      <iframe :src="'https://www.youtube.com/embed/' + item.video_id" v-if="player===item.video_id"></iframe>
- -->
+      </div>
+     <!-- <iframe :src="'https://www.youtube.com/embed/' + item.video_id" v-if="player===item.video_id"></iframe> -->
+
     </div>
   </div>
 </template>

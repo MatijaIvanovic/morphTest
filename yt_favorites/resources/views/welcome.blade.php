@@ -6,6 +6,8 @@
 
         <title>Laravel</title>
         @vite(['resources/js/styles/app.css'])
+        <link rel="icon" href="{{ url('favicon.ico') }}" />
+
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
         <div id='app'></div>
