@@ -38,10 +38,26 @@ onMounted(()=>{
 })
 
 
-const playVideo = (video_id)=>{
+const playVideo = async(video_id)=>{
   currentVideoId.value= video_id;
   isModalOpen.value= true;
+
+  try{
+    const token = localStorage.getItem('token')
+    const response = await axios.post('/api/watched',
+      {video_id:video_id},
+    {
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    });
+    console.log(response.data.message);
+
+  }catch(error){
+    console.log('ERROR!!!!!!', error);
+  }
 }
+
 const closeModal = ()=>{
   isModalOpen.value=false;
   currentVideoId.value='';
@@ -95,7 +111,7 @@ const addFavorites = async(videoId, videoTitle, videoDuration, channelTitle, thu
       
       return response;
     } catch (error) {
-      return response;
+      return error;
       }
 
 }
@@ -127,7 +143,7 @@ const handleAddToFavorites = async(video_id = null) => {
       console.error('Video not found for the ID: ',video_id);
       return;
     }
-    const isAlreadyFavorite = await checkIfAlreadyFavorite(video.video_id);
+    const isAlreadyFavorite = await checkIfAlreadyFavorite(video.video_id); 
     if(isAlreadyFavorite){
       alertMessage.value= "This video is already in favorites!";
       alertType.value = 'error';

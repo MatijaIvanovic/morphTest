@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('thumbnail_url');
             $table->string('channel_name');
             $table->unique(['user_id', 'video_id']);
-            $table->timestamp('watched_at');
+            $table->timestamp('watched_at')->nullable(true);
             $table->timestamps();
         });
     }

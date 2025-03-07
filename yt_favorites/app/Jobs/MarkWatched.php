@@ -34,10 +34,10 @@ class MarkWatched implements ShouldQueue
         $user = User::find($this->user_id);
 
         if($user){
-            $video = FavoriteList::where(['user_id'=>$this->user_id, 'video_id'=>$this->video_id])->first();
-            if($video){
+            $video = FavoriteList::where(['user_id'=>$this->user_id, 'video_id'=>$this->video_id])
+                ->whereNull('watched_at');
+            if($user);
                 $video->update(['watched_at'=>now()]);
-            }
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\MarkWatched;
 use App\Models\FavoriteList;
 use DeepCopy\Filter\Filter;
 use Error;
@@ -43,7 +44,7 @@ class FavoriteListController extends Controller
         $data = $request->json()->all();
 
         $data['user_id'] = $user->id;
-
+        
         try{
             FavoriteList::create($data);
         
@@ -152,5 +153,23 @@ class FavoriteListController extends Controller
         $response = FavoriteList::where(['user_id'=>$user->id,'video_id'=>$id])->delete();
 
         return $response;
+    }
+
+
+    public function markWatched(Request $request){
+        $video_id = $request->input('video_id');
+        try{
+            $user= JWTAuth::parseToken()->authenticate();
+        }catch(\Exception $e){
+            return response()->json(['message'=>'Not a valid token!']);
+        }
+        if($video_id){
+            MarkWatched::dispatch($user->id, $video_id);
+            return response()->json(['message'=>'successfully added to queue!']);
+        }
+        else{
+            return response()->json(['message'=> 'Video id not provided!']);
+        }
+    
     }
 }

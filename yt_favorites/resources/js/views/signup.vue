@@ -20,7 +20,7 @@ onMounted(()=>{
 const signup = async() => {
 
   if(password.value!=passwordConfirmed.value){
-    alert('Passwords do not match!');
+    errorMessage.value = 'Passwords do not match!';
     return;
 
   }
@@ -31,10 +31,12 @@ const signup = async() => {
       localStorage.setItem('token', response.data.token);
 
       router.push('/');
+    }else{
+      errorMessage.value = 'Email already exists!';
     }
   }catch(error: any){
 
-    errorMessage.value = error.response?.data?.messsage || 'Error!';
+    errorMessage.value = 'Email already exists!';
 
   }
 
@@ -92,7 +94,7 @@ const signup = async() => {
             <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign up</button>
           </div>
         </form>
-        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        <p v-if="errorMessage" class="error text-red-500">{{ errorMessage }}</p>
         <p class="mt-10 text-center text-sm/6 text-gray-500">
           Already have an account?
           {{ ' ' }}
